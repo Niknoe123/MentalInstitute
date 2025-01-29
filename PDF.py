@@ -27,3 +27,4 @@ c.showPage()
 c.save()
 
 print(f"PDF opgeslagen als: {pdf_filename}")
+os.startfile(pdf_filename)
