@@ -1,0 +1,91 @@
+import json
+
+
+def order_naar_factuur(order_json):
+    
+    klant = order_json["klant"]
+    producten = order_json["producten"]
+    
+    
+    totaal_bedrag = 0
+    voor_items = []
+    
+    for product in producten:
+        totaal_product = product["prijs_per_stuk"] * product["hoeveelheid"]
+        totaal_bedrag += totaal_product
+        voor_items.append({
+            "product_id": product["product_id"],
+            "naam": product["naam"],
+            "hoeveelheid": product["hoeveelheid"],
+            "prijs_per_stuk": product["prijs_per_stuk"],
+            "totaal_product": totaal_product
+        })
+    
+   
+    factuur = {
+        "factuur_id": f"F{order_json['order_id']}",
+        "klant": klant,
+        "factuur_regels": voor_items,
+        "totaal_bedrag": totaal_bedrag,
+        "BTW": totaal_bedrag * 0.21,  
+        "te_betalen": totaal_bedrag * 1.21  
+    }
+    
+    return factuur
+
+
+order_json = {
+    "order_id": "12345",
+    "klant": {
+        "naam": "Jan Jansen",
+        "adres": "Straatnaam 1, 1234 AB, Stad",
+        "email": "jan@example.com"
+    },
+    "producten": [
+        {
+            "product_id": "A123",
+            "naam": "Product A",
+            "hoeveelheid": 2,
+            "prijs_per_stuk": 10.00
+        },
+        {
+            "product_id": "B456",
+            "naam": "Product B",
+            "hoeveelheid": 1,
+            "prijs_per_stuk": 20.00
+        }
+    ]
+}
+
+
+factuur_json = order_naar_factuur(order_json)
+
+
+with open("factuur.json", "w") as f:
+    json.dump(factuur_json, f, indent=4)
+
+print("Factuur JSON bestand is aangemaakt.")
+
+
+{
+    "order_id": "12345",
+    "klant": {
+        "naam": "Jan Jansen",
+        "adres": "Straatnaam 1, 1234 AB, Stad",
+        "email": "jan@example.com"
+    },
+    "producten": [
+        {
+            "product_id": "A123",
+            "naam": "Product A",
+            "hoeveelheid": 2,
+            "prijs_per_stuk": 10.00
+        },
+        {
+            "product_id": "B456",
+            "naam": "Product B",
+            "hoeveelheid": 1,
+            "prijs_per_stuk": 20.00
+        }
+    ]
+}
